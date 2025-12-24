@@ -1,0 +1,43 @@
+%{
+#include <stdio.h>
+
+#define SYM_A 1
+#define SYM_B 2
+#define SYM_C 3
+#define EPSILON 4
+#define PLUS 5
+#define CONCAT 6
+#define STAR 7
+#define PAR_O 8
+#define PAR_F 9
+%}
+
+%%
+"a" {return SYM_A; }
+"b" { return SYM_B; }
+"c" { return SYM_C; }
+"E" { return EPSILON; }
+
+"+" { return PLUS; }
+"." { return CONCAT; }
+"*" { return STAR; }
+
+"(" { return PAR_O; }
+")" { return PAR_F; }
+
+[ \t\n]+  ;
+
+. { printf("Caractère invalide : %s\n", yytext); }
+%%
+
+int main(void) {
+    int t;
+    while ((t = yylex()) != 0) {
+        printf("Token reconnu : %d\n", t);
+    }
+    return 0;
+}
+
+int yywrap(void) {
+    return 1;
+} 
