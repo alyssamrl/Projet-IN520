@@ -27,8 +27,12 @@
 
 [ \t\n]+  ;
 
-. { printf("Caractère invalide : %s\n", yytext); }
+. { 
+    printf("Caractère invalide : %s\n", yytext); 
+    return yytext[0];
+}
 %%
+
 
 int main(void) {
     int t;
@@ -37,6 +41,7 @@ int main(void) {
     }
     return 0;
 }
+
 
 int yywrap(void) {
     return 1;
