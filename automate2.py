@@ -1,3 +1,4 @@
+# version 2: correction d'un bug dans la fonction minimisation
 import copy as cp
 
 
@@ -75,6 +76,42 @@ def concatenation(a1, a2):
 def union(a1, a2):
     """Retourne l'automate qui reconnaît l'union des 
     langages reconnus par les automates a1 et a2""" 
+    a1 = cp.deepcopy(a1)
+    a2 = cp.deepcopy(a2)
+
+    a = automate("O") #automate vide
+
+    decalage_a1 = 1
+    decalage_a2 = 1 + a1.n
+
+    a.n = 1 + a1.n + a2.n #nb états nouvel automate
+
+    # On parcourt toutes les transitions de a1
+    for etat_source, symbole in a1.transition:
+        etats_cibles = a1.transition[(etat_source, symbole)]
+        
+        # On décale les états source et cible
+        nouvel_etat_source = etat_source + decalage_a1
+        nouveaux_etats_cibles = [etat + decalage_a1 for etat in etats_cibles]
+        
+        # On ajoute la transition dans le nouvel automate
+        a.transition[(nouvel_etat_source, symbole)] = nouveaux_etats_cibles
+
+    # Pareil pour a2
+    for etat_source, symbole in a2.transition:
+        etats_cibles = a2.transition[(etat_source, symbole)]
+        
+        nouvel_etat_source = etat_source + decalage_a2
+        nouveaux_etats_cibles = [etat + decalage_a2 for etat in etats_cibles]
+
+        a.transition[(nouvel_etat_source, symbole)] = nouveaux_etats_cibles
+
+    a.transition[(0, "E")] = [decalage_a1, decalage_a2]  #ajoute les ε-transitions depuis le nouvel état initial
+
+    a.final = [q + decalage_a1 for q in a1.final] + [q + decalage_a2 for q in a2.final]  #décalage des états finaux et ajout dans a
+
+    a.name = "(" + a1.name + "+" + a2.name + ")"
+
     return a
 
 
@@ -152,6 +189,10 @@ def completion(a):
     return a
 
 
+###################################################
+# version corrigée de la fonction de minimisation #
+###################################################
+
 def minimisation(a):
     """ retourne l'automate minimum
         a doit être déterministe complet
@@ -190,7 +231,13 @@ def minimisation(a):
                 new_part.extend(classes.values())
             else:
                 new_part.append(e)
-        part = new_part    
+        part = new_part
+    # on réordonne la partition pour que le premier sous-ensemble soit celui qui contient l'état initial
+    for i, e in enumerate(part):
+        if 0 in e:
+            part[0], part[i] = part[i], part[0]
+            break
+ 
      
     # Étape 3 : on construit le nouvel automate minimal
     mapping = {}
