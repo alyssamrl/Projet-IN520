@@ -75,10 +75,6 @@ base :
 
 %%
 
-int main(void) {
-    yyparse();
-    return 0;
-}
 
 void yyerror(const char *s) {
     printf("il y a une erreur\n");

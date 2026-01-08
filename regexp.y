@@ -3,8 +3,9 @@
     #include <stdlib.h>
     #include <string.h>
 
-    int yylex(void);
-    void yyerror(const char *s);
+int yylex(void);
+void yyerror(const char *s);
+char* RESULT=NULL;
 
 char* mkstr(const char* s) {
     char* r= malloc(strlen(s)+1);
@@ -31,9 +32,13 @@ char* mk2(const char* a, const char* b, const char* c) {
 %token PAR_O PAR_F
 
 %type <s> expr term factor base
-%start expr 
-
+%start start
 %%
+
+start:
+    expr { RESULT = $1; }
+;
+
 
 expr : 
      expr PLUS term {
@@ -68,11 +73,6 @@ base :
     ;
 
 %%
-
-int main(void) {
-    yyparse();
-    return 0;
-}
 
 void yyerror(const char *s) {
     printf("il y a une erreur\n");
