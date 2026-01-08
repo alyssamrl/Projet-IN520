@@ -1,10 +1,14 @@
+
+
 %{
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
 
-    int yylex(void);
-    void yyerror(const char *s);
+int yylex(void);
+void yyerror(const char *s);
+
+char* RESULT=NULL;
 
 char* mkstr(const char* s) {
     char* r= malloc(strlen(s)+1);
@@ -31,16 +35,18 @@ char* mk2(const char* a, const char* b, const char* c) {
 %token PAR_O PAR_F
 
 %type <s> expr term factor base
-%start expr 
-
+%start expr
 %%
 
 expr : 
      expr PLUS term {
         $$=mk2("union(",mk2($1,",",$3), ")");
-
+        printf("%s\n", $$);
      }
-    | term { $$=$1; }
+    | term { 
+        $$=$1;
+        printf("%s\n", $$);
+    }
     ;
 
 
