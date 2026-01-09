@@ -70,6 +70,34 @@ class automate:
 def concatenation(a1, a2): 
     """Retourne l'automate qui reconnaît la concaténation des 
     langages reconnus par les automates a1 et a2"""
+    a1 = cp.deepcopy(a1)
+    a2 = cp.deepcopy(a2)
+
+    a = automate("O")
+    a.transition = {}
+    a.final = []
+
+    decalage = a1.n
+    a.n = a1.n + a2.n
+
+    #copies des transitions de a1
+    for etat_source, symbole in a1.transition:
+        etats_cibles = a1.transition[(etat_source, symbole)]
+        a.transition[(etat_source, symbole)] = list(etats_cibles)
+
+    #copies des transitions de a2 en décalant les états
+    for etat_source, symbole in a2.transition:
+        etats_cibles = a2.transition[(etat_source, symbole)]
+        a.transition[(etat_source + decalage, symbole)] = [d + decalage for d in etats_cibles]
+
+    #ajout des ε transitions de tous les états finaux de a1 vers le début de a2
+    for q in a1.final:
+        a.ajoute_transition(q, "E", [decalage])
+
+    a.final = [q + decalage for q in a2.final]  #les états finaux de a sont ceux de a2 décalés
+
+    a.name = "(" + a1.name + "." + a2.name + ")"
+    
     return a
 
 
@@ -78,7 +106,6 @@ def union(a1, a2):
     langages reconnus par les automates a1 et a2""" 
     a1 = cp.deepcopy(a1)
     a2 = cp.deepcopy(a2)
-
     a = automate("O") #automate vide
 
     decalage_a1 = 1
@@ -86,18 +113,18 @@ def union(a1, a2):
 
     a.n = 1 + a1.n + a2.n #nb états nouvel automate
 
-    # On parcourt toutes les transitions de a1
+    #parcourt toutes les transitions de a1
     for etat_source, symbole in a1.transition:
         etats_cibles = a1.transition[(etat_source, symbole)]
         
-        # On décale les états source et cible
+        #décale tous les états
         nouvel_etat_source = etat_source + decalage_a1
         nouveaux_etats_cibles = [etat + decalage_a1 for etat in etats_cibles]
         
-        # On ajoute la transition dans le nouvel automate
+        #ajoute la transition dans le nouvel automate
         a.transition[(nouvel_etat_source, symbole)] = nouveaux_etats_cibles
 
-    # Pareil pour a2
+    #pareil pour a2
     for etat_source, symbole in a2.transition:
         etats_cibles = a2.transition[(etat_source, symbole)]
         
@@ -183,9 +210,33 @@ def determinisation(a):
     
     
 def completion(a):
-    """ retourne l'automate a complété
-        l'automate en entrée doit être déterministe
-    """
+    """Retourne l'automate a complété (a déterministe)"""
+    a = cp.deepcopy(a)
+
+    etat_poubelle = a.n 
+    besoin_poubelle = False
+
+    #vérifier s'il manque une transition
+    for q in range(a.n):
+        for c in a.alphabet:
+            if (q, c) not in a.transition:
+                besoin_poubelle = True
+
+    if not besoin_poubelle:
+        return a
+
+    a.n += 1  #ajouter l'état poubelle
+
+    #ajouter les transitions manquantes vers l'état poubelle
+    for q in range(a.n):
+        for c in a.alphabet:
+            if (q, c) not in a.transition:
+                a.transition[(q, c)] = [etat_poubelle]
+
+    #boucles sur l'état poubelle
+    for c in a.alphabet:
+        a.transition[(etat_poubelle, c)] = [etat_poubelle]
+
     return a
 
 
