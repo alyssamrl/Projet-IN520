@@ -155,16 +155,16 @@ def etoile(a):
     res.final=[0]
     res.transition={}
 
-    for i in range(a.n):
-        for c in a.alphabet:
-            if (i,c) in a.transition:
-                res.transition[(i+decalage,c)]=[q + decalage for q in a.transition[(i,c)]]
+    for (etat_source, symbole), etat_cibles in a.transition.items():
+                res.transition[(etat_source + decalage, symbole)]=[
+                    q + decalage for q in etat_cibles
+                ]
 
 
     res.ajoute_transition(0,"E", [decalage])
 
     for qf in a.final:
-        res.ajoute_transition(qf+decalage, "E", [decalage])
+        res.ajoute_transition(qf+decalage, "E", [decalage,0])
         
         
     return res
@@ -385,44 +385,51 @@ def tout_faire(a):
     return a4
 
 
+
+def canonique(a):
+        mapping = {0: 0}
+        queue = [0]
+        next_id = 1
+        transitions = {}
+
+        while queue:
+            q = queue.pop(0)
+            for c in a.alphabet:
+                dest = a.transition[(q, c)][0]
+                if dest not in mapping:
+                    mapping[dest] = next_id
+                    next_id += 1
+                    queue.append(dest)
+                transitions[(mapping[q], c)] = [mapping[dest]]
+
+        res = automate("O")
+        res.alphabet = a.alphabet
+        res.n = len(mapping)
+        res.final = sorted({mapping[q] for q in a.final})
+        res.transition = transitions
+        return res
+  
+
 def egal(a1, a2):
-    """ retourne True si a1 et a2 sont isomorphes
-        a1 et a2 doivent être minimaux
-    """
+   """ retourne True si a1 et a2 sont isomorphes
+       a1 et a2 doivent être minimaux
+   """
+   a1=tout_faire(a1)
+   a2=tout_faire(a2)
     #vérifie le nb d'états
-    if a1.n != a2.n:
-        return False
-    
-    correspondance = {}  #dico pour stocker la correspondance entre les états de a1 et a2
-    vus = set()  #ensemble des états déjà traités
-    pile = [(0, 0)]  #on compare d'abord les états initiaux
+   if a1.alphabet != a2.alphabet:
+       return False
+   if a1.n!=a2.n:
+       return False
 
-    #parcours en profondeur des états
-    while pile:
-        q1, q2 = pile.pop() #récupère les états à comparer
+   c1=canonique(a1)
+   c2=canonique(a2)
 
-        if (q1, q2) in vus:  #si déjà vus on continue
-            continue
-        vus.add((q1, q2)) 
-
-        if (q1 in a1.final) != (q2 in a2.final): #vérifie les états finaux
-            return False
-
-        #parcours des transitions
-        for s in a1.alphabet:
-            r1 = a1.transition[(q1, s)][0] #recupère l'état cible
-            r2 = a2.transition[(q2, s)][0]
-
-            if r1 in correspondance:  
-                if correspondance[r1] != r2:  #si pas cohérent
-                    return False
-            else:
-                pile.append((r1, r2)) #si pas encore comparés
-    return True 
-
-
-
-
+   return(
+       c1.n==c2.n
+       and c1.final==c2.final
+       and c1.transition==c2.transition
+   )
 # TESTS
 # à écrire
 

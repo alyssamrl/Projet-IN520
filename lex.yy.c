@@ -450,9 +450,10 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "regexp.l"
 #line 3 "regexp.l"
+#include <stdio.h>
 #include "regexp.tab.h"
-#line 454 "lex.yy.c"
 #line 455 "lex.yy.c"
+#line 456 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -669,9 +670,9 @@ YY_DECL
 		}
 
 	{
-#line 6 "regexp.l"
+#line 7 "regexp.l"
 
-#line 674 "lex.yy.c"
+#line 675 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -730,70 +731,70 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 7 "regexp.l"
+#line 8 "regexp.l"
 {return SYM_A; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 8 "regexp.l"
+#line 9 "regexp.l"
 { return SYM_B; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 9 "regexp.l"
+#line 10 "regexp.l"
 { return SYM_C; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 10 "regexp.l"
+#line 11 "regexp.l"
 { return EPSILON; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 12 "regexp.l"
+#line 13 "regexp.l"
 { return PLUS; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 13 "regexp.l"
+#line 14 "regexp.l"
 { return CONCAT; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 14 "regexp.l"
+#line 15 "regexp.l"
 { return STAR; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 16 "regexp.l"
+#line 17 "regexp.l"
 { return PAR_O; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 17 "regexp.l"
+#line 18 "regexp.l"
 { return PAR_F; }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 19 "regexp.l"
+#line 20 "regexp.l"
 ;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 21 "regexp.l"
+#line 22 "regexp.l"
 { return yytext[0]; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 22 "regexp.l"
+#line 23 "regexp.l"
 { return 0; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 23 "regexp.l"
+#line 24 "regexp.l"
 ECHO;
 	YY_BREAK
-#line 796 "lex.yy.c"
+#line 797 "lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1796,7 +1797,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 23 "regexp.l"
+#line 24 "regexp.l"
 
 
 

@@ -1,10 +1,8 @@
-<<<<<<< Updated upstream
-from automate2 import *
-import os
-=======
-from automate2 import automate, concatenation, union, etoile, tout_faire,egal
+
+
 import subprocess
->>>>>>> Stashed changes
+from automate2 import automate, concatenation, union, etoile, tout_faire,egal
+
 
 lignes=[]
 with open("test.1") as f:
@@ -13,17 +11,14 @@ with open("test.1") as f:
             if L!="":
                  lignes.append(L)
 
-
-
 codes=[]
 for regex in lignes:
     out=subprocess.check_output(
         ["./regex_parser"],
-        input=regex,
+        input=regex + "\n",
         text=True
     )
     codes.append(out.strip())
-
 
 a1=tout_faire(eval(codes[0]))
 a2=tout_faire(eval(codes[1]))
