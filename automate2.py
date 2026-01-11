@@ -145,8 +145,29 @@ def union(a1, a2):
 def etoile(a):
     """Retourne l'automate qui reconnaît l'étoile de Kleene du 
     langage reconnu par l'automate a""" 
-    return a
 
+    a=cp.deepcopy(a)
+    res=automate("O")
+    res.name=a.name +"*"
+
+    decalage=1
+    res.n=a.n+1
+    res.final=[0]
+    res.transition={}
+
+    for i in range(a.n):
+        for c in a.alphabet:
+            if (i,c) in a.transition:
+                res.transition[(i+decalage,c)]=[q + decalage for q in a.transition[(i,c)]]
+
+
+    res.ajoute_transition(0,"E", [decalage])
+
+    for qf in a.final:
+        res.ajoute_transition(qf+decalage, "E", [decalage])
+        
+        
+    return res
 
 def acces_epsilon(a):
     """ retourne la liste pour chaque état des états accessibles par epsilon
@@ -206,7 +227,53 @@ def determinisation(a):
         la construction garantit que tous les états sont accessibles
         automate d'entrée sans epsilon-transitions
     """        
-    return a
+
+    a=cp.deepcopy(a)
+
+    dfa=automate("O")
+    dfa.transition={}
+    dfa.final=[]
+    dfa.name=a.name + "_det"
+
+    mapping={}
+    attente=[]
+  
+    init=(0,)
+    mapping[init]=0
+    attente.append(init)
+    dfa.n=1
+
+    if any(q in a.final for q in init):
+        dfa.final.append(0)
+
+    while attente:
+        courant=attente.pop(0)
+        current_index=mapping[courant]
+
+        for c in a.alphabet:
+          c1=[]
+
+          for q in courant:
+            if(q,c) in a.transition:
+                c1+=a.transition[(q,c)]
+            
+          if not c1:
+             continue
+
+          c1=sorted(set(c1))
+          c1_tuple=tuple(c1)
+
+          if c1_tuple not in mapping:
+              mapping[c1_tuple]=dfa.n
+              dfa.n+=1
+              attente.append(c1_tuple)
+
+              if any(q in a.final for q in c1_tuple):
+                dfa.final.append(mapping[c1_tuple])
+ 
+          dfa.transition[(current_index,c)]=[mapping[c1_tuple]]
+
+    return dfa
     
     
 def completion(a):
@@ -322,7 +389,6 @@ def egal(a1, a2):
         a1 et a2 doivent être minimaux
     """
     return True
-
 
 
 # TESTS
