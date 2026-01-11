@@ -1,7 +1,6 @@
 from automate2 import *
 a=automate("a")
-e=etoile(a)
+b=automate("b")
+u=union(a,b)
+e=etoile(u)
 print(e)
-
-s=supression_epsilon_transitions(e)
-print(s)

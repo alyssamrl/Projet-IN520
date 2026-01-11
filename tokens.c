@@ -1,0 +1,9 @@
+#define SYM_A   1
+#define SYM_B   2
+#define SYM_C   3
+#define EPSILON 4
+#define PLUS    5
+#define CONCAT  6
+#define STAR    7
+#define PAR_O   8
+#define PAR_F   9
