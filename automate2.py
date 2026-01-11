@@ -146,13 +146,13 @@ def etoile(a):
     """Retourne l'automate qui reconnaît l'étoile de Kleene du 
     langage reconnu par l'automate a""" 
 
-    a=cp.deepcopy(a)
+    a=cp.deepcopy(a)   
     res=automate("O")
     res.name=a.name +"*"
 
     decalage=1
     res.n=a.n+1
-    res.final=[0]
+    res.final=[0] 
     res.transition={}
 
     for (etat_source, symbole), etat_cibles in a.transition.items():
@@ -385,28 +385,23 @@ def tout_faire(a):
     return a4
 
 
-
-
-
 def egal(a1, a2):
   """ retourne True si a1 et a2 sont isomorphes
       a1 et a2 doivent être minimaux
   """
-  #vérifie le nb d'états
-  a1=tout_faire(a1)
-  a2=tout_faire(a2)
+  #vérifie l'alphabet et le nb d'états
   if a1.alphabet!=a2.alphabet:
       return False
   if a1.n != a2.n:
       return False
   
-  mapping={0: 0}
-  reverse={0: 0}
+  correspondance={0: 0}
+  correspondance_reverse={0: 0}
   queue=[0]
 
   while queue:
         q1=queue.pop(0)
-        q2=mapping[q1]
+        q2=correspondance[q1]
 
         if (q1 in a1.final)!=(q2 in a2.final):
             return False
@@ -415,16 +410,16 @@ def egal(a1, a2):
           r1=a1.transition[(q1,c)][0]
           r2=a2.transition[(q2,c)][0]
           
-          if r1 in mapping:
-              if mapping[r1]!=r2:
+          if r1 in correspondance:
+              if correspondance[r1]!=r2:
                   return False
 
               continue
-          if r2 in reverse:
+          if r2 in correspondance_reverse:
               return False
           
-          mapping[r1]=r2
-          reverse[r2]=r1
+          correspondance[r1]=r2
+          correspondance_reverse[r2]=r1
           queue.append(r1)
   return True
 
