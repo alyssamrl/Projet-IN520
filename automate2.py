@@ -386,50 +386,60 @@ def tout_faire(a):
 
 
 
-def canonique(a):
-        mapping = {0: 0}
-        queue = [0]
-        next_id = 1
-        transitions = {}
 
-        while queue:
-            q = queue.pop(0)
-            for c in a.alphabet:
-                dest = a.transition[(q, c)][0]
-                if dest not in mapping:
-                    mapping[dest] = next_id
-                    next_id += 1
-                    queue.append(dest)
-                transitions[(mapping[q], c)] = [mapping[dest]]
-
-        res = automate("O")
-        res.alphabet = a.alphabet
-        res.n = len(mapping)
-        res.final = sorted({mapping[q] for q in a.final})
-        res.transition = transitions
-        return res
-  
 
 def egal(a1, a2):
-   """ retourne True si a1 et a2 sont isomorphes
-       a1 et a2 doivent être minimaux
-   """
-   a1=tout_faire(a1)
-   a2=tout_faire(a2)
-    #vérifie le nb d'états
-   if a1.alphabet != a2.alphabet:
-       return False
-   if a1.n!=a2.n:
-       return False
+  """ retourne True si a1 et a2 sont isomorphes
+      a1 et a2 doivent être minimaux
+  """
+  #vérifie le nb d'états
+  a1=tout_faire(a1)
+  a2=tout_faire(a2)
+  if a1.alphabet!=a2.alphabet:
+      return False
+  if a1.n != a2.n:
+      return False
+  
+  mapping={0: 0}
+  reverse={0: 0}
+  queue=[0]
 
-   c1=canonique(a1)
-   c2=canonique(a2)
+  while queue:
+        q1=queue.pop(0)
+        q2=mapping[q1]
 
-   return(
-       c1.n==c2.n
-       and c1.final==c2.final
-       and c1.transition==c2.transition
-   )
+        if (q1 in a1.final)!=(q2 in a2.final):
+            return False
+
+        for c in a1.alphabet:
+          r1=a1.transition[(q1,c)][0]
+          r2=a2.transition[(q2,c)][0]
+          
+          if r1 in mapping:
+              if mapping[r1]!=r2:
+                  return False
+
+              continue
+          if r2 in reverse:
+              return False
+          
+          mapping[r1]=r2
+          reverse[r2]=r1
+          queue.append(r1)
+  return True
+
+
+# TESTS
+# à écrire
+
+
+
+
+
+
+
+
+
 # TESTS
 # à écrire
 
