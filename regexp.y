@@ -51,7 +51,7 @@ expr :
 
 term : 
      term CONCAT factor {
-        $$=mk2("concat(",mk2($1,",",$3), ")");
+        $$=mk2("concatenation(",mk2($1,",",$3), ")");
      }
     | factor { $$=$1; }
     ;
@@ -59,7 +59,7 @@ term :
 
 factor : 
      base STAR {
-        $$=mk2("star(",$1,")");
+        $$=mk2("etoile(",$1,")");
      }
     | base { $$=$1; }
     ;

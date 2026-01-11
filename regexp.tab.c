@@ -1113,7 +1113,7 @@ yyreduce:
   case 5: /* term: term CONCAT factor  */
 #line 53 "regexp.y"
                         {
-        (yyval.s)=mk2("concat(",mk2((yyvsp[-2].s),",",(yyvsp[0].s)), ")");
+        (yyval.s)=mk2("concatenation(",mk2((yyvsp[-2].s),",",(yyvsp[0].s)), ")");
      }
 #line 1119 "regexp.tab.c"
     break;
@@ -1127,7 +1127,7 @@ yyreduce:
   case 7: /* factor: base STAR  */
 #line 61 "regexp.y"
                {
-        (yyval.s)=mk2("star(",(yyvsp[-1].s),")");
+        (yyval.s)=mk2("etoile(",(yyvsp[-1].s),")");
      }
 #line 1133 "regexp.tab.c"
     break;

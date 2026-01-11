@@ -1,21 +1,34 @@
+<<<<<<< Updated upstream
 from automate2 import *
 import os
+=======
+from automate2 import automate, concatenation, union, etoile, tout_faire,egal
+import subprocess
+>>>>>>> Stashed changes
 
-with open("test.1", "r") as f:
-    expr1=f.readline().strip()
-    expr2=f.readline().strip()
+lignes=[]
+with open("test.1") as f:
+    for ligne in f:
+            L=ligne.strip()
+            if L!="":
+                 lignes.append(L)
 
 
-code1=os.popen(f'echo "{expr1}" | ./regex_parser').read().strip()
-code2=os.popen(f'echo "{expr2}" | ./regex_parser').read().strip()
 
-print("CODE 1 =", code1)
-print("CODE2 =", code2)
+codes=[]
+for regex in lignes:
+    out=subprocess.check_output(
+        ["./regex_parser"],
+        input=regex,
+        text=True
+    )
+    codes.append(out.strip())
 
-A1=eval(code1)
-A2=eval(code2)
 
-if A1==A2:
+a1=tout_faire(eval(codes[0]))
+a2=tout_faire(eval(codes[1]))
+
+if egal(a1,a2):
     print("EGAL")
 else:
     print("NON EGAL")
