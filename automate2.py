@@ -389,7 +389,36 @@ def egal(a1, a2):
     """ retourne True si a1 et a2 sont isomorphes
         a1 et a2 doivent être minimaux
     """
-    return True
+    #vérifie le nb d'états
+    if a1.n != a2.n:
+        return False
+    
+    correspondance = {}  #dico pour stocker la correspondance entre les états de a1 et a2
+    vus = set()  #ensemble des états déjà traités
+    pile = [(0, 0)]  #on compare d'abord les états initiaux
+
+    #parcours en profondeur des états
+    while pile:
+        q1, q2 = pile.pop() #récupère les états à comparer
+
+        if (q1, q2) in vus:  #si déjà vus on continue
+            continue
+        vus.add((q1, q2)) 
+
+        if (q1 in a1.final) != (q2 in a2.final): #vérifie les états finaux
+            return False
+
+        #parcours des transitions
+        for s in a1.alphabet:
+            r1 = a1.transition[(q1, s)][0] #recupère l'état cible
+            r2 = a2.transition[(q2, s)][0]
+
+            if r1 in correspondance:  
+                if correspondance[r1] != r2:  #si pas cohérent
+                    return False
+            else:
+                pile.append((r1, r2)) #si pas encore comparés
+    return True 
 
 
 

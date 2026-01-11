@@ -1,4 +1,4 @@
-from automate import *
+from automate2 import *
 import os
 
 with open("test.1", "r") as f:
