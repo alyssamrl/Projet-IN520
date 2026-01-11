@@ -230,50 +230,51 @@ def determinisation(a):
 
     a=cp.deepcopy(a)
 
-    dfa=automate("O")
-    dfa.transition={}
-    dfa.final=[]
-    dfa.name=a.name + "_det"
+    res=automate("O")
+    res.name=a.name + "_det"
+    res.transition={}
+    res.final=[]
+    
 
-    mapping={}
-    attente=[]
+    etat={}
+    L=[]
   
     init=(0,)
-    mapping[init]=0
-    attente.append(init)
-    dfa.n=1
+    etat[init]=0
+    L.append(init)
+    res.n=1
 
     if any(q in a.final for q in init):
-        dfa.final.append(0)
+        res.final.append(0)
 
-    while attente:
-        courant=attente.pop(0)
-        current_index=mapping[courant]
+    while L:
+        courant=L.pop(0)
+        current_index=etat[courant]
 
         for c in a.alphabet:
-          c1=[]
+          new_part=[]
 
           for q in courant:
             if(q,c) in a.transition:
-                c1+=a.transition[(q,c)]
+                new_part+=a.transition[(q,c)]
             
-          if not c1:
+          if not new_part:
              continue
 
-          c1=sorted(set(c1))
-          c1_tuple=tuple(c1)
+          new_part=sorted(set(new_part))
+          new_part2=tuple(new_part)
 
-          if c1_tuple not in mapping:
-              mapping[c1_tuple]=dfa.n
-              dfa.n+=1
-              attente.append(c1_tuple)
+          if new_part2 not in etat:
+              etat[new_part2]=res.n
+              res.n+=1
+              L.append(new_part2)
 
-              if any(q in a.final for q in c1_tuple):
-                dfa.final.append(mapping[c1_tuple])
+              if any(q in a.final for q in new_part2):
+                 res.final.append(etat[new_part2])
  
-          dfa.transition[(current_index,c)]=[mapping[c1_tuple]]
+          res.transition[(current_index,c)]=[etat[new_part2]]
 
-    return dfa
+    return res
     
     
 def completion(a):
@@ -391,5 +392,8 @@ def egal(a1, a2):
     return True
 
 
+
+
 # TESTS
 # à écrire
+
