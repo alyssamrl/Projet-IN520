@@ -777,21 +777,21 @@ YY_RULE_SETUP
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 20 "regexp.l"
+#line 19 "regexp.l"
 ;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 22 "regexp.l"
+#line 21 "regexp.l"
 { return yytext[0]; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 23 "regexp.l"
+#line 22 "regexp.l"
 { return 0; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 24 "regexp.l"
+#line 23 "regexp.l"
 ECHO;
 	YY_BREAK
 #line 797 "lex.yy.c"
@@ -1797,9 +1797,32 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 24 "regexp.l"
+#line 23 "regexp.l"
 
 
 
+
+/*
+. { 
+    printf("Caractère invalide : %s\n", yytext); 
+    return yytext[0]; 
+} */
+
+
+/*
+int main(void) {
+    int t;
+    while ((t = yylex()) != 0) {
+        printf("Token reconnu : %d\n", t);
+    }
+    return 0;
+}
+*/
+
+/*
+int yywrap(void) {
+    return 1;
+} 
+*/
 
 

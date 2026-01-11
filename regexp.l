@@ -16,10 +16,9 @@
 
 "(" { return PAR_O; }
 ")" { return PAR_F; }
-
 [ \t\n]+  ;
 
-. { return yytext[0]; }
+.     { return yytext[0]; }
 <<EOF>> { return 0; }
 %%
 
@@ -28,7 +27,7 @@
 /*
 . { 
     printf("Caractère invalide : %s\n", yytext); 
-    /* return yytext[0]; */
+    return yytext[0]; 
 } */
 
 

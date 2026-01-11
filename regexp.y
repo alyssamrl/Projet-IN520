@@ -35,8 +35,13 @@ char* mk2(const char* a, const char* b, const char* c) {
 %token PAR_O PAR_F
 
 %type <s> expr term factor base
-%start expr
+%start input
 %%
+
+input:
+    expr
+    | input expr
+    ;
 
 expr : 
      expr PLUS term {
@@ -75,6 +80,9 @@ base :
 
 %%
 
+int main(void) {
+    return yyparse();
+}
 
 void yyerror(const char *s) {
     printf("il y a une erreur\n");
